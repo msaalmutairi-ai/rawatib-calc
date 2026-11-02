@@ -145,15 +145,19 @@ function onOther(){
 }
 function otherSrc(r,gk){return r.flat?r.seen[r.def]:r.seen[gk]}
 function updLvl(){const r=isOT()?curOT():null;$('lLvl').hidden=!(r&&r.unk)}
+const REP={'أ':75,'ب':66,'1':58.5};
+function setRep(){$('repIn').value=REP[$('grade').value]||0}
 function prefillOther(){
   const r=curOT(),gk=$('grade').value,s=otherSrc(r,gk);
   $('lvlIn').value=r.lvl||0;updLvl();
   $('incIn').value=s?s.inc:0;
   $('othIn').value=s?s.oth:0;
   $('ic').checked=s?s.ic:r.seen[r.def].ic;
+  setRep();
 }
 function prefill(){
   const t=cur().t,gk=$('grade').value,x=t.titles[+$('title').value];
+  setRep();
   if(x&&x[2]!==undefined){$('incIn').value=x[2];$('othIn').value=x[3];return}
   $('incIn').value=(t.inc&&t.inc[gk]!==undefined)?t.inc[gk]:0;
   $('othIn').value=(t.oth&&t.oth[gk]!==undefined)?t.oth[gk]:0;
@@ -219,7 +223,7 @@ function render(){
   const hc=$('hc'),hl=hcLine(name);hc.hidden=!hl;hc.innerHTML=hl;
   const nt=['<strong>تنبيهات</strong><ul>'];
   if(flags.indexOf(CTMSG)>=0)nt.push('<li>أغلب موظفي هذا المسمى عقود، والحاسبة للكادر فقط.</li>');
-  nt.push('<li>يرجى إضافة البدلات بشكل يدوي: بدل شاشة، تمثيل، إشراف، تخصص نادر، ماجستير، دكتوراه، موقع، خفارة، وغيرها.</li>');
+  nt.push('<li>يرجى إضافة البدلات بشكل يدوي: بدل شاشة، إشراف، تخصص نادر، ماجستير، دكتوراه، موقع، خفارة، وغيرها.</li>');
   nt.push('<li>إضافة الحالة الزوجية وعدد الأبناء والعلاوة الدورية بشكل يدوي.</li>');
   nt.push('</ul>');$('notes').innerHTML=nt.join('');
 }
