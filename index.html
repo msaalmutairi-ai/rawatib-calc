@@ -94,7 +94,7 @@ input[type=number]{border-radius:12px;padding:12px 14px}
 <label id="lLvl" hidden>مكافأة المستوى (د.ك)<input type="number" id="lvlIn" min="0" step="5" value="0"></label>
 <label id="lInc">المكافأة التشجيعية<input type="number" id="incIn" min="0" step="5" value="0"></label>
 <details class="opt" open><summary>بدلات واستقطاعات تضيفها يدوياً</summary><div class="optgrid">
-<label id="lOth">بدل آخر (طبيعة عمل أو غيره)<input type="number" id="othIn" min="0" step="5" value="0"></label>
+<label id="lOth">بدل طبيعة العمل (غير معروف لهذا المسمى، أدخله)<input type="number" id="othIn" min="0" step="5" value="0"></label>
 <label id="lScr">بدل شاشة (د.ك)<input type="number" id="scrIn" min="0" step="5" value="0"></label>
 <input type="hidden" id="repIn" value="0">
 <label id="lSup">بدل إشراف (د.ك)<input type="number" id="supIn" min="0" step="5" value="0"></label>
@@ -192,7 +192,7 @@ function params(){
     else if(r.flat&&!r.seen[gk])flags.push('هذه الدرجة ما ظهرت لهذا المسمى في الكشوف، والمبلغ ثابت بالمسمى فانطبق عليها.');
     const oth=+$('othIn').value||0,inc=+$('incIn').value||0;
     if(r.nosp)flags.push('هذا المسمى بدون علاوة خاصة في كشف الراتب.');
-    return {p:{base0:g.base,step:g.step,soc:g.s,socm:g.sm,sp:r.nosp?0:g.sp,inc,lvl:r.unk?lv:r.lvl,oth:extra(r.othLabel,oth),ic,ms,kids,n},name:r.name,gn:g.n,flags,uns};
+    return {p:{base0:g.base,step:g.step,soc:g.s,socm:g.sm,sp:r.nosp?0:g.sp,inc,lvl:r.unk?lv:r.lvl,oth:extra(r.othLabel,oth),ic,ms,kids,n},name:r.name,gn:g.n,flags,uns,needOth:!!(r.unk||!s)};
   }
   const t=l.t,x=t.titles[ti],gk=$('grade').value,g=G[gk];
   if(t.warn)flags.push(t.warn);
@@ -202,7 +202,7 @@ function params(){
   else if(t.incWarn&&t.unsure&&t.unsure.includes(gk)){flags.push(t.incWarn);uns=true}
   if(!byTitle&&t.oth&&t.oth[gk]===undefined&&t.othLabel){flags.push('بدل الطبيعة غير معروف لهذه الدرجة، أدخله يدوياً.');uns=true}
   const oth=+$('othIn').value||0, inc=+$('incIn').value||0;
-  return {p:{base0:g.base,step:g.step,soc:g.s,socm:g.sm,sp:t.nosp?0:g.sp,inc,lvl:x[1],oth:extra(t.othLabel,oth),ic,ms,kids,n},name:x[0],gn:g.n,flags,uns};
+  return {p:{base0:g.base,step:g.step,soc:g.s,socm:g.sm,sp:t.nosp?0:g.sp,inc,lvl:x[1],oth:extra(t.othLabel,oth),ic,ms,kids,n},name:x[0],gn:g.n,flags,uns,needOth:!!(!byTitle&&t.oth&&t.oth[gk]===undefined&&t.othLabel)};
 }
 function hcLine(name){
   if(!HC)return '';
@@ -212,7 +212,8 @@ function hcLine(name){
   return '<b class="int">داخلي</b>'+name+': '+h[0].toLocaleString('en-US')+' موظف'+(L.length?' ('+L.join(' · ')+')':'');
 }
 function render(){
-  const {p,name,gn,flags,uns}=params(),c=calc(p);
+  const {p,name,gn,flags,uns,needOth}=params(),c=calc(p);
+  $('lOth').hidden=!needOth;
   const row=(l,v,cls,sub)=>'<tr'+(cls?' class="'+cls+'"':'')+'><td>'+l+(sub?'<small>'+sub+'</small>':'')+'</td><td class="n">'+f(v)+'</td></tr>';
   let h='<thead><tr><th>'+name+'</th><th class="n">الدرجة '+gn+'</th></tr></thead><tbody><tr class="sec"><td colspan="2">الاستحقاقات</td></tr>';
   c.rows.forEach(r=>{if(r[1]!==0)h+=row(r[0],r[1])});
