@@ -98,10 +98,9 @@ input[type=number]{border-radius:12px;padding:12px 14px}
 <label id="lScr">بدل شاشة (د.ك)<input type="number" id="scrIn" min="0" step="5" value="0"></label>
 <input type="hidden" id="repIn" value="0">
 <label id="lSup">بدل إشراف (د.ك)<input type="number" id="supIn" min="0" step="5" value="0"></label>
-<label id="lRare">بدل التخصص النادر (د.ك)<input type="number" id="rareIn" min="0" step="5" value="0"></label>
 <label id="lMa">بدل ماجستير (د.ك)<input type="number" id="maIn" min="0" step="5" value="0"></label>
 <label id="lPh">بدل دكتوراه (د.ك)<input type="number" id="phIn" min="0" step="5" value="0"></label>
-<p class="hint">بدل إشراف المعلمين: مدير مدرسة 400، مدير مدرسة مساعد 300، رئيس قسم 200. التوجيه الفني: موجه عام 400، أول 300، مادة دراسية 200، مع بدل توجيه 150. بدل التخصص النادر للمعلمين 200.</p>
+<p class="hint">بدل إشراف المعلمين: مدير مدرسة 400، مدير مدرسة مساعد 300، رئيس قسم 200. التوجيه الفني: موجه عام 400، أول 300، مادة دراسية 200، مع بدل توجيه 150.</p>
 <label class="loan" id="lLoan">قرض عقاري من بنك الائتمان (قسط شهري، د.ك)<input type="number" id="loanIn" min="0" step="1" value="0"></label>
 </div></details>
 <label class="chk"><input type="checkbox" id="ic" checked>الزيادة الشهرية 50</label>
@@ -177,7 +176,7 @@ function fillTitles(tix){
   }
   updLvl();
 }
-function extra(lb,oth){const a=oth?[[lb||'بدل آخر',oth]]:[],sc=+$('scrIn').value||0,rp=+$('repIn').value||0;if(sc)a.push(['بدل شاشة',sc]);if(rp)a.push(['بدل تمثيل',rp]);const su=+$('supIn').value||0;if(su)a.push(['بدل إشراف',su]);[['rareIn','بدل التخصص النادر'],['maIn','بدل ماجستير'],['phIn','بدل دكتوراه']].forEach(p=>{const v=+$(p[0]).value||0;if(v)a.push([p[1],v])});return a}
+function extra(lb,oth){const a=oth?[[lb||'بدل آخر',oth]]:[],sc=+$('scrIn').value||0,rp=+$('repIn').value||0;if(sc)a.push(['بدل شاشة',sc]);if(rp)a.push(['بدل تمثيل',rp]);const su=+$('supIn').value||0;if(su)a.push(['بدل إشراف',su]);[['maIn','بدل ماجستير'],['phIn','بدل دكتوراه']].forEach(p=>{const v=+$(p[0]).value||0;if(v)a.push([p[1],v])});return a}
 const CTMSG='أغلب موظفي هذا المسمى بعقود (العقد الثاني أو استعانة بخبرات)، والحاسبة للكادر فقط ولا تغطي رواتب العقود.';
 function params(){
   const ms=$('ms').value,kids=+$('kids').value,n=+$('n').value,ic=$('ic').checked;
@@ -225,7 +224,7 @@ function render(){
   const hc=$('hc'),hl=hcLine(name);hc.hidden=!hl;hc.innerHTML=hl;
   const nt=['<strong>تنبيهات</strong><ul>'];
   if(flags.indexOf(CTMSG)>=0)nt.push('<li>أغلب موظفي هذا المسمى عقود، والحاسبة للكادر فقط.</li>');
-  nt.push('<li>يرجى إضافة البدلات بشكل يدوي: بدل شاشة، إشراف، تخصص نادر، ماجستير، دكتوراه، موقع، خفارة، وغيرها.</li>');
+  nt.push('<li>يرجى إضافة البدلات بشكل يدوي: بدل شاشة، إشراف، ماجستير، دكتوراه، موقع، خفارة، وغيرها.</li>');
   nt.push('<li>إضافة الحالة الزوجية وعدد الأبناء والعلاوة الدورية بشكل يدوي.</li>');
   nt.push('</ul>');$('notes').innerHTML=nt.join('');
 }
@@ -260,14 +259,14 @@ $('grp').onchange=()=>{fillLadders();fillTitles();render();openOpt()};
 $('lad').onchange=()=>{fillTitles();render();openOpt()};
 $('title').onchange=()=>{if(isOT())onOther();else prefill();updLvl();render();openOpt()};
 $('grade').addEventListener('change',()=>{if(isOT())prefillOther();else prefill();render();openOpt()});
-['lvlIn','incIn','othIn','scrIn','repIn','supIn','rareIn','maIn','phIn','loanIn'].forEach(i=>$(i).addEventListener('input',render));
+['lvlIn','incIn','othIn','scrIn','repIn','supIn','maIn','phIn','loanIn'].forEach(i=>$(i).addEventListener('input',render));
 ['n','ms','kids','ic'].forEach(i=>$(i).addEventListener('change',render));
 function init(){fillGroups();fillLadders(DEFL);fillTitles();render();openOpt()}
 init();
 function openOpt(){const d=document.querySelector('details.opt');if(+$('othIn').value>0)d.open=true}
 function tick(){var d=new Date();$("clk").textContent=d.toLocaleDateString("ar-KW",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Kuwait",numberingSystem:"latn"})+" · "+d.toLocaleTimeString("ar-KW",{hour:"numeric",minute:"2-digit",timeZone:"Asia/Kuwait",numberingSystem:"latn"})}
 tick();setInterval(tick,30000);
-$('resetBtn').onclick=()=>{['scrIn','repIn','supIn','rareIn','maIn','phIn','loanIn'].forEach(i=>$(i).value=0);$('ms').value='s';$('kids').value=0;$('q').value='';$('qres').hidden=true;init();$('n').value=0;render();};
+$('resetBtn').onclick=()=>{['scrIn','repIn','supIn','maIn','phIn','loanIn'].forEach(i=>$(i).value=0);$('ms').value='s';$('kids').value=0;$('q').value='';$('qres').hidden=true;init();$('n').value=0;render();};
 function saveImg(){const b=$('saveBtn'),old=b.textContent;b.textContent='جاري التجهيز...';
  const go=()=>html2canvas($('cap'),{backgroundColor:getComputedStyle(document.body).backgroundColor,scale:2}).then(c=>{const a=document.createElement('a');a.download='حساب-الراتب.png';a.href=c.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();b.textContent=old}).catch(()=>{b.textContent='تعذر الحفظ، خذ لقطة شاشة';setTimeout(()=>b.textContent=old,2500)});
  if(window.html2canvas)go();else{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';sc.onload=go;sc.onerror=()=>{b.textContent='تعذر الحفظ، خذ لقطة شاشة';setTimeout(()=>b.textContent=old,2500)};document.head.appendChild(sc)}}
